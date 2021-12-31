@@ -1,87 +1,66 @@
-let __urlPrefix = '';
+import store, { injectReducer, removeReducer } from '@indlekofer/redux-store';
+import Reducer, {
+  REDUCER,
+  STATE_SCREEN,
+  STATE_SCREEN_DATA,
+  STATE_SCREEN_PREVIOUS,
+  STATE_SCREEN_DATA_PREVIOUS
+} from './reducer';
 
-const __screens = {};
+import setupScreen, {
+  register,
+  matchPath,
+  findById,
+  createComponent,
+  createTitle,
+  createUrl,
+  getUrlPrefix
+} from './screen';
 
-export const register = (screen) => {
-  const screenObject = new screen();
-  __screens[screenObject.getId()] = screenObject;
-};
- 
-export const matchPath = (path) => {
-  if (__urlPrefix.length > 0) {
-    // expect path with prefix
-    if (__urlPrefix.length <= path.length && path.indexOf(__urlPrefix) === 0) {
-      // remove prefix from path
-      path = path.substr(__urlPrefix.length);
-    } else {
-      return [null, null];
-    }
-  }
+import changeScreen from './actions/changeScreen';
+import changeScreenData from './actions/changeScreenData';
+import popstate from './actions/popstate';
+import previousScreen from './actions/previousScreen';
 
-  let pathSplit = path.split('/');
-
-  if (pathSplit.length > 1 && pathSplit[0] == '') {
-    pathSplit.shift();
-  }
-  if (pathSplit.length >= 1 && pathSplit[0] == '') {
-    pathSplit.shift();
-  }
-  
-  const keys = Object.keys(__screens);
-
-  for (let i = 0; i < keys.length; i++) {
-    const screen = __screens[keys[i]];
-
-    const match = screen.match(pathSplit);
-    if (match[0] !== null) {
-      return match;
-    }
-  }
-
-  return [null, null];
+export const setup = (force = true) => {
+  injectReducer(Reducer, REDUCER, force);
 };
 
-export const findById = (screenId) => {
-  if (screenId === null) {
-    return null;
-  } else if (__screens[screenId]) {
-    return __screens[screenId];
-  } else {
-    return null;
-  }
+export const unset = () => {
+  removeReducer(REDUCER);
 };
 
-export const createComponent = (screenId) => {
-  const screen = findById(screenId);
-  if (screen) {
-    return screen.getComponent();
-  } else {
-    return null;
-  }
+setup(false);
+
+export const dispatchChangeScreen = (screenId, screenData, usePushState = true) => {
+  store.dispatch(changeScreen(screenId, screenData, usePushState));
 };
 
-export const createTitle = (screenId, screenData) => {
-  const screen = findById(screenId);
-  if (screen) {
-    return screen.getTitle(screenData);
-  } else {
-    return null;
-  }
+export const dispatchChangeScreenData = (screenData) => {
+  store.dispatch(changeScreenData(screenData));
 };
 
-export const createUrl = (screenId, screenData) => {
-  const screen = findById(screenId);
-  if (screen) {
-    return __urlPrefix + screen.getUrl(screenData);
-  } else {
-    return null;
-  }
+export const dispatchPreviousScreen = (fallbackScreenId = null, fallbackScreenData = null, usePushState = true) => {
+  store.dispatch(previousScreen(fallbackScreenId, fallbackScreenData, usePushState));
 };
 
-export const getUrlPrefix = () => {
-  return __urlPrefix;
+export {
+  REDUCER,
+  STATE_SCREEN,
+  STATE_SCREEN_DATA,
+  STATE_SCREEN_PREVIOUS,
+  STATE_SCREEN_DATA_PREVIOUS,
+  register,
+  matchPath,
+  findById,
+  createComponent,
+  createTitle,
+  createUrl,
+  getUrlPrefix,
+  changeScreen,
+  changeScreenData,
+  popstate,
+  previousScreen
 };
 
-export default (urlPrefix = '') => {
-  __urlPrefix = urlPrefix;
-};
+export default setupScreen;
