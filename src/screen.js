@@ -72,7 +72,18 @@ export const createTitle = (screenId, screenData) => {
 export const createUrl = (screenId, screenData) => {
   const screen = findById(screenId);
   if (screen) {
-    return __urlPrefix + screen.getUrl(screenData);
+    let prefix = __urlPrefix;
+    let url = screen.getUrl(screenData);
+    // avoid double /
+    if (prefix.charAt(prefix.length - 1) === '/') {
+      prefix = prefix.slice(0, prefix.length - 1);
+    }
+
+    if (url.charAt(0) === '/') {
+      url = url.slice( 1 );
+    }
+
+    return prefix + '/' + url;
   } else {
     return null;
   }

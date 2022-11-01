@@ -1,4 +1,4 @@
-import init, { register, matchPath, findById, getUrlPrefix } from '../src/index';
+import init, { register, matchPath, findById, getUrlPrefix, createUrl } from '../src/index';
 
 import { expect } from 'chai';
 
@@ -7,6 +7,9 @@ const dummyScreen = function () {
   this.getId = function () {
     return DUMMYSCREEN_ID;
   };
+  this.getUrl = function () {
+    return '/text';
+  }
   this.match = function (path) {
     if (path[0] == 'test') {
       return [DUMMYSCREEN_ID, null];
@@ -46,6 +49,12 @@ describe('index', () => {
     expect(findById(DUMMYSCREEN_ID).getId()).to.equal(DUMMYSCREEN_ID);
     expect(findById(null)).to.equal(null);
     expect(findById('notExisitingId')).to.equal(null);
+  });
+  it('createUrl', () => {
+    init('/pre/');
+    expect(createUrl(DUMMYSCREEN_ID)).to.deep.equal('/pre/text');
+    init('/pre');
+    expect(createUrl(DUMMYSCREEN_ID)).to.deep.equal('/pre/text');
   });
 
 });
