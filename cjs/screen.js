@@ -3,18 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.register = exports.matchPath = exports.getUrlPrefix = exports.findById = exports["default"] = exports.createUrl = exports.createTitle = exports.createComponent = void 0;
+exports.register = exports.matchPath = exports.getUrlPrefix = exports.getContext = exports.findById = exports["default"] = exports.createUrl = exports.createTitle = exports.createComponent = void 0;
 var __urlPrefix = '';
+var __context = null;
 var __screens = {};
-
-var register = function register(screen) {
+var register = exports.register = function register(screen) {
   var screenObject = new screen();
   __screens[screenObject.getId()] = screenObject;
 };
-
-exports.register = register;
-
-var matchPath = function matchPath(path) {
+var matchPath = exports.matchPath = function matchPath(path) {
   if (__urlPrefix.length > 0) {
     // expect path with prefix
     if (__urlPrefix.length <= path.length && path.indexOf(__urlPrefix) === 0) {
@@ -24,34 +21,24 @@ var matchPath = function matchPath(path) {
       return [null, null];
     }
   }
-
   var pathSplit = path.split('/');
-
   if (pathSplit.length > 1 && pathSplit[0] == '') {
     pathSplit.shift();
   }
-
   if (pathSplit.length >= 1 && pathSplit[0] == '') {
     pathSplit.shift();
   }
-
   var keys = Object.keys(__screens);
-
   for (var i = 0; i < keys.length; i++) {
     var screen = __screens[keys[i]];
-    var match = screen.match(pathSplit);
-
+    var match = screen.match(pathSplit, __context);
     if (match[0] !== null) {
       return match;
     }
   }
-
   return [null, null];
 };
-
-exports.matchPath = matchPath;
-
-var findById = function findById(screenId) {
+var findById = exports.findById = function findById(screenId) {
   if (screenId === null) {
     return null;
   } else if (__screens[screenId]) {
@@ -60,65 +47,48 @@ var findById = function findById(screenId) {
     return null;
   }
 };
-
-exports.findById = findById;
-
-var createComponent = function createComponent(screenId) {
+var createComponent = exports.createComponent = function createComponent(screenId) {
   var screen = findById(screenId);
-
   if (screen) {
     return screen.getComponent();
   } else {
     return null;
   }
 };
-
-exports.createComponent = createComponent;
-
-var createTitle = function createTitle(screenId, screenData) {
+var createTitle = exports.createTitle = function createTitle(screenId, screenData) {
   var screen = findById(screenId);
-
   if (screen && typeof screen.getTitle == 'function') {
     return screen.getTitle(screenData);
   } else {
     return null;
   }
 };
-
-exports.createTitle = createTitle;
-
-var createUrl = function createUrl(screenId, screenData) {
+var createUrl = exports.createUrl = function createUrl(screenId, screenData) {
   var screen = findById(screenId);
-
   if (screen) {
     var prefix = __urlPrefix;
-    var url = screen.getUrl(screenData); // avoid double /
-
+    var url = screen.getUrl(screenData);
+    // avoid double /
     if (prefix.charAt(prefix.length - 1) === '/') {
       prefix = prefix.slice(0, prefix.length - 1);
     }
-
     if (url.charAt(0) === '/') {
       url = url.slice(1);
     }
-
     return prefix + '/' + url;
   } else {
     return null;
   }
 };
-
-exports.createUrl = createUrl;
-
-var getUrlPrefix = function getUrlPrefix() {
+var getUrlPrefix = exports.getUrlPrefix = function getUrlPrefix() {
   return __urlPrefix;
 };
-
-exports.getUrlPrefix = getUrlPrefix;
-
-var _default = function _default() {
-  var urlPrefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-  __urlPrefix = urlPrefix;
+var getContext = exports.getContext = function getContext() {
+  return __context;
 };
-
-exports["default"] = _default;
+var _default = exports["default"] = function _default() {
+  var urlPrefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  __urlPrefix = urlPrefix;
+  __context = context;
+};

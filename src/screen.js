@@ -1,4 +1,5 @@
 let __urlPrefix = '';
+let __context = null;
 
 const __screens = {};
 
@@ -32,7 +33,7 @@ export const matchPath = (path) => {
   for (let i = 0; i < keys.length; i++) {
     const screen = __screens[keys[i]];
 
-    const match = screen.match(pathSplit);
+    const match = screen.match(pathSplit, __context);
     if (match[0] !== null) {
       return match;
     }
@@ -93,7 +94,11 @@ export const getUrlPrefix = () => {
   return __urlPrefix;
 };
 
-export default (urlPrefix = '') => {
-  __urlPrefix = urlPrefix;
+export const getContext = () => {
+  return __context;
 };
 
+export default (urlPrefix = '', context = null) => {
+  __urlPrefix = urlPrefix;
+  __context = context;
+};

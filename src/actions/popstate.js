@@ -1,5 +1,5 @@
 import { TYPE_CHANGE, STATE_SCREEN, STATE_SCREEN_DATA } from '../reducer';
-import { createTitle, matchPath } from '../screen';
+import { createTitle, matchPath, getContext } from '../screen';
 
 export default (e) => (dispatch) => {
   e.preventDefault();
