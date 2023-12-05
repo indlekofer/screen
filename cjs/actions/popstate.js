@@ -26,7 +26,7 @@ var _default = exports["default"] = function _default(e) {
       screenId = _matchPath2[0];
       screenData = _matchPath2[1];
       if (typeof window.document != 'undefined') {
-        var title = (0, _screen.createTitle)(screenId, screenData);
+        var title = (0, _screen.createTitle)(screenId, screenData, (0, _screen.getContext)());
         if (title !== null) {
           window.document.title = title;
         }

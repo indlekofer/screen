@@ -9,7 +9,7 @@ export default (e) => (dispatch) => {
     [screenId, screenData] = matchPath(window.location.pathname);
 
     if (typeof window.document != 'undefined') {
-      const title = createTitle(screenId, screenData);
+      const title = createTitle(screenId, screenData, getContext());
 
       if (title !== null) {
         window.document.title = title;

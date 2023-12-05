@@ -22,9 +22,9 @@ var _default = exports["default"] = function _default() {
       screenData = fallbackScreenData;
     }
     if (typeof window != 'undefined') {
-      var title = (0, _screen.createTitle)(screenId, screenData);
+      var title = (0, _screen.createTitle)(screenId, screenData, (0, _screen.getContext)());
       if (usePushState && typeof window.history != 'undefined') {
-        var url = (0, _screen.createUrl)(screenId, screenData);
+        var url = (0, _screen.createUrl)(screenId, screenData, (0, _screen.getContext)());
         window.history.pushState({}, title, url);
       }
       if (title !== null && typeof window.document != 'undefined') {

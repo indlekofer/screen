@@ -64,7 +64,7 @@ export const createComponent = (screenId) => {
 export const createTitle = (screenId, screenData) => {
   const screen = findById(screenId);
   if (screen && typeof screen.getTitle == 'function') {
-    return screen.getTitle(screenData);
+    return screen.getTitle(screenData, __context);
   } else {
     return null;
   }
@@ -74,7 +74,7 @@ export const createUrl = (screenId, screenData) => {
   const screen = findById(screenId);
   if (screen) {
     let prefix = __urlPrefix;
-    let url = screen.getUrl(screenData);
+    let url = screen.getUrl(screenData, __context);
     // avoid double /
     if (prefix.charAt(prefix.length - 1) === '/') {
       prefix = prefix.slice(0, prefix.length - 1);

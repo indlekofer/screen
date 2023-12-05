@@ -18,7 +18,7 @@ var _default = exports["default"] = function _default(screenId, screenData) {
     if (typeof window != 'undefined') {
       var title = (0, _screen.createTitle)(screenId, screenData);
       if (usePushState) {
-        var url = (0, _screen.createUrl)(screenId, screenData);
+        var url = (0, _screen.createUrl)(screenId, screenData, (0, _screen.getContext)());
         window.history.pushState({}, title, url);
       }
       if (title !== null) window.document.title = title;

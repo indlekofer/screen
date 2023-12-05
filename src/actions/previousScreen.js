@@ -1,4 +1,4 @@
-import { createTitle, createUrl } from '../screen';
+import { createTitle, createUrl, getContext } from '../screen';
 import {
   REDUCER,
   TYPE_CHANGE,
@@ -19,10 +19,10 @@ export default (fallbackScreenId = null, fallbackScreenData = null, usePushState
     screenData = fallbackScreenData;
   }
   if (typeof window != 'undefined') {
-    const title = createTitle(screenId, screenData);
+    const title = createTitle(screenId, screenData, getContext());
 
     if (usePushState && typeof window.history != 'undefined') {
-      const url = createUrl(screenId, screenData);
+      const url = createUrl(screenId, screenData, getContext());
       window.history.pushState({}, title, url);
     }
     

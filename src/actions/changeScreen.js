@@ -1,4 +1,4 @@
-import { createTitle, createUrl } from '../screen';
+import { createTitle, createUrl, getContext } from '../screen';
 import {
   REDUCER,
   TYPE_CHANGE,
@@ -18,7 +18,7 @@ export default (screenId, screenData, usePushState = true) => (dispatch, getStat
     const title = createTitle(screenId, screenData);
 
     if (usePushState) {
-      const url = createUrl(screenId, screenData);
+      const url = createUrl(screenId, screenData, getContext());
       window.history.pushState({}, title, url);
     }
     
